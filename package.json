@@ -1,0 +1,35 @@
+{
+  "name": "nodebb-plugin-sso-steam-v2",
+  "version": "2.0.0",
+  "description": "NodeBB Steam SSO refactor",
+  "main": "library.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuperiorServers/nodebb-plugin-sso-steam-v2"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "openid",
+    "steam",
+    "sso",
+    "single sign on",
+    "registration"
+  ],
+  "author": {
+    "name": "Julian and Igor, refactor by h0lybyte, v2 by aStonedPenguin",
+    "email": "admin@kbve.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SuperiorServers/nodebb-plugin-sso-steam-v2"
+  },
+  "readme": "",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "passport-steam": "~1.0.1"
+  },
+  "nbbpm": {
+    "compatibility": "^1.0.1"
+  }
+}
