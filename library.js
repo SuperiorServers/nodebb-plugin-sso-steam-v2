@@ -21,6 +21,10 @@
 
 	var Steam = {};
 
+	function profileurl(steamid) {
+		return 'https://steamcommunity.com/profiles/' + steamid;
+	}
+
 	Steam.init = function(data, callback) {
 		function render(req, res, next) {
 			res.render('admin/plugins/sso-steam', {});
@@ -29,6 +33,14 @@
 		data.router.get('/api/admin/plugins/sso-steam', render);
 		callback();
 	};
+
+	Steam.linkAccount = function (uid, steamid) {
+		user.setUserField(uid, 'steam-sso:steamid', steamid);
+		user.setUserField(uid, 'steam-sso:profile', profileurl(steamid));
+
+		db.setObjectField('steam-sso:uid-link', steamid, uid);
+		db.setObjectField('steam-sso:steamid-link', uid, steamid);
+	}
 
 	Steam.getStrategy = function (strategies, callback) {
 		meta.settings.get('sso-steam', function(err, settings) {
@@ -43,14 +55,10 @@
 					},
 
 					function (req, identifier, profile, done) {
-
-						// I think this can cause you to fuck up your steamid link and double link yourself, lets comment it for now
-						/*if (req.hasOwnProperty('user') && req.user.hasOwnProperty('uid') && req.user.uid > 0) {
-							// Save Steam-specific information to the user
-							user.setUserField(req.user.uid, 'steamid', profile.id);
-							db.setObjectField('steamid:uid', profile.id, req.user.uid);
+						if (req.hasOwnProperty('user') && req.user.hasOwnProperty('uid') && req.user.uid > 0) {
+							Steam.linkAccount(req.user.uid, profile.id);
 							return done(null, req.user);
-						}*/
+						}
 
 						Steam.login(profile.id, profile.displayName, profile._json.avatarfull, function(err, user) {
 							if (err) {
@@ -76,9 +84,7 @@
 		});
 	};
 
-	function profileurl(steamid) {
-		return 'https://steamcommunity.com/profiles/' + steamid;
-	}
+
 
 	Steam.getAssociation = function (data, callback) {
 		Steam.getSteamidByUid(data.uid, function (err, steamid) {
@@ -126,14 +132,8 @@
 					if (err !== null) {
 						callback(err);
 					} else {
-						// Save steam-specific information to the user
-						user.setUserField(uid, 'steam-sso:steamid', steamid);
-						user.setUserField(uid, 'steam-sso:profile', profileurl(steamid));
+						Steam.linkAccount(uid, steamid);
 
-						db.setObjectField('steam-sso:uid-link', steamid, uid);
-						db.setObjectField('steam-sso:steamid-link', uid, steamid);
-
-						//user.setUserField(uid, 'uploadedpicture', avatar);
 						user.setUserField(uid, 'picture', avatar);
 
 						callback(null, {
