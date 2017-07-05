@@ -6,7 +6,7 @@
 		meta = module.parent.require('./meta'),
 		passport = module.parent.require('passport'),
 		passportSteam = require('passport-steam').Strategy,
-		utils = require('../../public/src/utils'),
+		utils = module.parent.require('../public/src/utils'),
 		authenticationController = module.parent.require('./controllers/authentication'),
 		winston = module.parent.require('winston'),
 		async = require('async');
