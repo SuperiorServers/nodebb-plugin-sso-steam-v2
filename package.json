@@ -28,7 +28,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "async": "^2.5.0",
-    "passport-steam": "~1.0.1"
+    "passport-steam": "~1.0.9"
   },
   "nbbpm": {
     "compatibility": "^1.0.1"
